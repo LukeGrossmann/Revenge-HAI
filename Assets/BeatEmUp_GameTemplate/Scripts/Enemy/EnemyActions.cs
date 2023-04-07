@@ -14,9 +14,12 @@ public class EnemyActions : Enemy {
 	public SpriteRenderer Shadow;
 	public Rigidbody2D rb;
 	public bool isDead;
-	public float YHitDistance = 0.4f; //the Y distance from which the enemy is able to hit the player
+	public float YHitDistance = 0.3f; //the Y distance from which the enemy is able to hit the player
+    private float randomOffset = 0;
+	private bool CR_running_resetOffset = false;
 	private float MoveThreshold = 0.1f; //margin threshold before the enemy starts moving
-	public float lastAttackTime; //the time of the last attack
+    private float MoveThresholdY = 0.01f; //margin threshold before the enemy starts moving
+    public float lastAttackTime; //the time of the last attack
 	private bool attackWhilePlayerIsgrounded = true; //only attack when the player is on the ground, and not while he's jumping
 
 	public void ATTACK() {
@@ -51,37 +54,54 @@ public class EnemyActions : Enemy {
 		LookAtTarget();
 
 		//horizontal movement
-		if (Mathf.Abs(DistanceToTargetX()-distance) > MoveThreshold){
+		//Debug.Log("DistanceToTargetX" + (DistanceToTargetX() - distance));
+		//Debug.Log("X position" + transform.position.x);
+		//var totalDist = DistanceToTargetX() - distance;
+		if (CR_running_resetOffset == false) { 
+		ResetOffset(2.0f);
+			CR_running_resetOffset = true;		
+		}
 
-			//move closer on horizontal line
-			Move(Vector3.right * (int)Dir2DistPoint(distance), speed);
+		//move closer on horizontal line
+		if (DistanceToTargetX() - distance > MoveThreshold + randomOffset)
+		{
+			Move(Vector3.right * Dir2DistPoint(distance, 1f), speed);
+		}
 
-		} else if (Mathf.Abs(DistanceToTargetY()-distance) > MoveThreshold){
+		else if (Mathf.Abs(DistanceToTargetY()) > MoveThresholdY + randomOffset) // *Removed - distance from DistanceToTargetY.
+		{
 
 			//move closer on vertical line
-			Move(Vector3.up * DirToVerticalLine(), speed/1.5f);
+			Move(Vector3.up * DirToVerticalLine(), speed / 1.5f);
 		} 
 	}
 
+	IEnumerator ResetOffset(float time)
+	{
+		yield return new WaitForSeconds(time);
+		randomOffset = Random.Range(-8.0f, 8.0f);
+		CR_running_resetOffset = false;
+	}
+
 	//returns the direction to the distance point
-	DIRECTION Dir2DistPoint(float distance){
+	float Dir2DistPoint(float distance, float amountToMove){
 		if(target == null) SetTarget2Player();
 
 		//go Left
 		if(transform.position.x < target.transform.position.x){
 			float distancepointX = target.transform.position.x - distance;
 			if(transform.position.x < distancepointX) 
-				return DIRECTION.Right;
+				return amountToMove;
 			else 
-				return DIRECTION.Left;
+				return -amountToMove;
 		} else {
 
 		//go Right
 			float distancepointX = target.transform.position.x + distance;
 			if(transform.position.x > distancepointX) 
-					return DIRECTION.Left;
+					return -amountToMove;
 				else 
-					return DIRECTION.Right;
+					return amountToMove;
 		}
 	}
 
@@ -133,7 +153,8 @@ public class EnemyActions : Enemy {
 
 	//move towards a vector
 	public void Move(Vector3 vector, float speed){
-		rb.velocity = vector * speed;
+		transform.position = new Vector2(transform.position.x + vector.x * speed * Time.deltaTime, transform.position.y + vector.y * speed * Time.deltaTime);
+		//rb.velocity = vector * speed; !WARNING this produces a bug.
 
 		if(speed>0) 
 			animator.Walk();
