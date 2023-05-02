@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EnemyAI : EnemyActions {
-	
+
+	public Score score;
 	public float XDistance = 0;
 	public float YDistance = 0;
 	public bool enableAI;
@@ -11,6 +12,7 @@ public class EnemyAI : EnemyActions {
 	private List<ENEMYSTATE> HitStates = new List<ENEMYSTATE> { ENEMYSTATE.DEATH, ENEMYSTATE.KNOCKDOWN, ENEMYSTATE.KNOCKDOWNGROUNDED }; //a list of states where the enemy is hit
 
 	void Start(){
+		score = GameObject.Find("ScoreUI").GetComponent<Score>();
 		animator = GFX.GetComponent<EnemyAnimator>();
 		rb = GetComponent<Rigidbody2D>();
 		EnemyManager.enemyList.Add(gameObject);
@@ -130,10 +132,13 @@ public class EnemyAI : EnemyActions {
 		animator.Death();
 		StartCoroutine(RemoveEnemy());
 		EnemyManager.RemoveEnemyFromList(gameObject);
+
+		//Add score....
+		score.addscore(5);
 	}
 
 	//sets the current range
-	private RANGE GetRangeToTarget(){
+	public RANGE GetRangeToTarget(){
 		XDistance = DistanceToTargetX();
 		YDistance = DistanceToTargetY();
 
