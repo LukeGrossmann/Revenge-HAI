@@ -8,15 +8,17 @@ public class EnemyAI : EnemyActions {
 	public float XDistance = 0;
 	public float YDistance = 0;
 	public bool enableAI;
-	private List<ENEMYSTATE> ActiveAIStates = new List<ENEMYSTATE> { ENEMYSTATE.IDLE, ENEMYSTATE.RUN, ENEMYSTATE.WALK }; //a list of states where the AI is executed
+	private List<ENEMYSTATE> ActiveAIStates = new List<ENEMYSTATE> { ENEMYSTATE.IDLE, ENEMYSTATE.RUN, ENEMYSTATE.WALK ,ENEMYSTATE.ATTACK}; //a list of states where the AI is executed
 	private List<ENEMYSTATE> HitStates = new List<ENEMYSTATE> { ENEMYSTATE.DEATH, ENEMYSTATE.KNOCKDOWN, ENEMYSTATE.KNOCKDOWNGROUNDED }; //a list of states where the enemy is hit
 
 	void Start(){
-		score = GameObject.Find("ScoreUI").GetComponent<Score>();
+		score = GameObject.Find("score_value").GetComponent<Score>();
 		animator = GFX.GetComponent<EnemyAnimator>();
 		rb = GetComponent<Rigidbody2D>();
 		EnemyManager.enemyList.Add(gameObject);
 		RandomizeValues();
+		//if(enemyType == ENEMYTYPE.Fighter)
+		//GFX.AddComponent<ChangeColor>();
 	}
 
 	void OnEnable(){
@@ -37,22 +39,59 @@ public class EnemyAI : EnemyActions {
 		UpdateSpriteSorting();
 	}
 
+	void AirAttack()
+	{
+		if (target == null) target = GameObject.Find("Player1"); //return;
+		if ((transform.position.y < target.transform.position.y + 0.3f && transform.position.y > target.transform.position.y - 0.3f)) ATTACK_AIR();
+		else
+		{
+			FlykickCompleted = true;
+		}
+	}
 	void AI(){
 		LookAtTarget();
 		range = GetRangeToTarget();
 
 		//attack range
-		if(range == RANGE.ATTACKRANGE){
-			if(enemyTactic == ENEMYTACTIC.ENGAGE)ATTACK();
+		if (range == RANGE.ATTACKRANGE){
+			if (enemyTactic == ENEMYTACTIC.ENGAGE)
+			{
+				if (enemyType == ENEMYTYPE.Fighter || enemyType == ENEMYTYPE.Ninja)
+				{
+					if (FlykickCompleted == true)
+					{
+						var randnum = Random.Range(1, 3);
+						if (randnum == 2)
+							AirAttack();
+						else ATTACK();
+					}
+					else AirAttack();
+				}
+				else ATTACK();
+			}
+
 			if(enemyTactic == ENEMYTACTIC.KEEPSHORTDISTANCE) MoveTo(closeRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPMEDIUMDISTANCE) MoveTo(midRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPFARDISTANCE) MoveTo(farRangeDistance, walkSpeed);
-			if(enemyTactic == ENEMYTACTIC.STANDSTILL) IDLE();
+   		    if(enemyTactic == ENEMYTACTIC.STANDSTILL) IDLE();
 		}
 
 		//close range
 		if(range == RANGE.CLOSERANGE){
-			if(enemyTactic == ENEMYTACTIC.ENGAGE) MoveTo(attackRange-.2f, walkSpeed);
+				if (enemyTactic == ENEMYTACTIC.ENGAGE)
+				{
+					if (enemyType == ENEMYTYPE.Fighter || enemyType == ENEMYTYPE.Ninja)
+					{ 
+						if (FlykickCompleted == true)
+						{
+							var randnum = Random.Range(1, 3);
+							if (randnum == 2)
+								AirAttack();
+							else MoveTo(attackRange-.2f, walkSpeed);
+						}
+						else AirAttack();		
+					} else MoveTo(attackRange - .2f, walkSpeed);
+				}
 			if(enemyTactic == ENEMYTACTIC.KEEPSHORTDISTANCE) MoveTo(closeRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPMEDIUMDISTANCE) MoveTo(midRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPFARDISTANCE) MoveTo(farRangeDistance, walkSpeed);
@@ -61,7 +100,24 @@ public class EnemyAI : EnemyActions {
 
 		//mid range
 		if(range == RANGE.MIDRANGE){
-			if(enemyTactic == ENEMYTACTIC.ENGAGE) MoveTo(attackRange -.2f, walkSpeed);
+			if (enemyTactic == ENEMYTACTIC.ENGAGE)
+			{
+				if (enemyTactic == ENEMYTACTIC.ENGAGE)
+				{
+					if (enemyType == ENEMYTYPE.Fighter || enemyType == ENEMYTYPE.Ninja)
+					{
+						if (FlykickCompleted == true)
+						{
+							var randnum = Random.Range(1, 3);
+							if (randnum == 2)
+								AirAttack();
+							else MoveTo(attackRange - .2f, walkSpeed);
+						}
+						else AirAttack();
+					}
+					else MoveTo(attackRange - .2f, walkSpeed);
+				}
+			}
 			if(enemyTactic == ENEMYTACTIC.KEEPSHORTDISTANCE) MoveTo(closeRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPMEDIUMDISTANCE) MoveTo(midRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPFARDISTANCE) MoveTo(farRangeDistance, walkSpeed);
@@ -69,9 +125,9 @@ public class EnemyAI : EnemyActions {
 		}
 
 		//far range
-		if(range == RANGE.FARRANGE){ 
+		if(range == RANGE.FARRANGE){
 			if(enemyTactic == ENEMYTACTIC.ENGAGE) MoveTo(attackRange -.2f, walkSpeed);
-			if(enemyTactic == ENEMYTACTIC.KEEPSHORTDISTANCE) MoveTo(closeRangeDistance, walkSpeed);
+			if (enemyTactic == ENEMYTACTIC.KEEPSHORTDISTANCE) MoveTo(closeRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPMEDIUMDISTANCE) MoveTo(midRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.KEEPFARDISTANCE) MoveTo(farRangeDistance, walkSpeed);
 			if(enemyTactic == ENEMYTACTIC.STANDSTILL) IDLE();
@@ -113,7 +169,7 @@ public class EnemyAI : EnemyActions {
 				//normal hit
 				animator.Hit();
 				enemyState = ENEMYSTATE.HIT;
-			}
+			}             
 		}
 
 		//unit is dead
@@ -134,7 +190,7 @@ public class EnemyAI : EnemyActions {
 		EnemyManager.RemoveEnemyFromList(gameObject);
 
 		//Add score....
-		score.addscore(5);
+		score.addscore(10);
 	}
 
 	//sets the current range
@@ -166,6 +222,11 @@ public class EnemyAI : EnemyActions {
 	void Look4Target(){
 		targetSpotted = DistanceToTargetX() < sightDistance;
 	}
+
+	void createSmoke()
+	{
+		Instantiate(SmokeEffect);
+	}
 }
 
 public enum ENEMYSTATE {
@@ -185,6 +246,7 @@ public enum ENEMYTACTIC {
 	KEEPMEDIUMDISTANCE = 2,
 	KEEPFARDISTANCE = 3,
 	STANDSTILL = 4,
+	AIRATTACK = 5
 }
 
 public enum RANGE {

@@ -14,9 +14,9 @@ public class InputManager : MonoBehaviour {
 	public KeyCode Right = KeyCode.RightArrow;
 	public KeyCode Up = KeyCode.UpArrow;
 	public KeyCode Down = KeyCode.DownArrow;
-	public KeyCode PunchKey = KeyCode.Z;
+	public KeyCode PunchKey = KeyCode.C;
 	public KeyCode KickKey = KeyCode.X;
-	public KeyCode DefendKey = KeyCode.C;
+	public KeyCode DefendKey = KeyCode.Z;
 	public KeyCode JumpKey = KeyCode.Space;
 
 	[Header("Joypad keys")]

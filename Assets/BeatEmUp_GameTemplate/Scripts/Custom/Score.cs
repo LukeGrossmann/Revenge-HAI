@@ -7,13 +7,18 @@ using TMPro;
 public class Score : MonoBehaviour
 {
     public GameObject textmeshpro;
-    private TextMeshProUGUI TextMeshProUGUI;
-    public int score;
+    static private TextMeshProUGUI TextMeshProUGUI;
+    static public int score;
     private void Start()
     {
         TextMeshProUGUI = textmeshpro.GetComponent<TextMeshProUGUI>();
     }
     public void addscore(int amount)
+    {
+        score += amount;
+        TextMeshProUGUI.SetText(score.ToString());
+    }
+    public static void addscoreStatic(int amount)
     {
         score += amount;
         TextMeshProUGUI.SetText(score.ToString());

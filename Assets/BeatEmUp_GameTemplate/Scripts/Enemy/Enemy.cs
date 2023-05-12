@@ -12,9 +12,19 @@ public class Enemy : MonoBehaviour {
 	public float farRangeDistance = 10f; //4.5f
 	public float walkSpeed = 2.5f;
 	public string enemyName = "";
+	public GameObject SmokeEffect;
+	public GameObject self;
+	public enum ENEMYTYPE
+	{ 
+		Thug,
+		Fighter,
+		Ninja,
+	}
+	public ENEMYTYPE enemyType;
 	public float sightDistance = 50f;
-	public int attackDamage = 2;
-	public float attackInterval = 1f;
+	public int attackDamage = 1;
+	public int kickDamage = 5;
+	public float attackInterval = 0.5f;
 	public bool targetSpotted;
 	    
 	//global event handler for enemies
@@ -25,6 +35,7 @@ public class Enemy : MonoBehaviour {
 	public static event UnitEventHandler OnUnitDestroy;
 
 	//destroy event
+	
 	public void DestroyUnit(){
 		if(OnUnitDestroy != null) OnUnitDestroy(gameObject);
 		Destroy(gameObject);
@@ -37,6 +48,7 @@ public class Enemy : MonoBehaviour {
 
 	void Awake(){
 		enemyName = GetName();
+		self = this.gameObject;
 	}
 
 	//returns a random name from this list

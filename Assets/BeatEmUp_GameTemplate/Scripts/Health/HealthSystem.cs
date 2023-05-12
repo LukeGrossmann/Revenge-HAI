@@ -3,16 +3,16 @@ using System.Collections;
 
 public class HealthSystem : MonoBehaviour {
 
-	public int MaxHp = 20;
-	public int CurrentHp = 20;
+	public int MaxHp = 500;
+	public float CurrentHp = 500;
 	public bool invulnerable;
 	public delegate void OnHealthChange(float percentage, GameObject GO);
 	public static event OnHealthChange onHealthChange;
 
 	//substract health
-	public void SubstractHealth(int damage){
+	public void SubstractHealth(float damage){
 		if(!invulnerable){
-
+			
 			//reduce hp
 			CurrentHp = Mathf.Clamp(CurrentHp -= damage, 0, MaxHp);
 

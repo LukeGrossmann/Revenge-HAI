@@ -21,6 +21,121 @@ public class EnemyActions : Enemy {
     private float MoveThresholdY = 0.01f; //margin threshold before the enemy starts moving
     public float lastAttackTime; //the time of the last attack
 	private bool attackWhilePlayerIsgrounded = true; //only attack when the player is on the ground, and not while he's jumping
+	private int currentDirection = 0;
+	public bool IsFlykick = true;
+	public bool FlykickCompleted = true;
+	private GameObject smokeEffectInstance = null;
+	private bool CR_RUNNING_StopKickTimer = false;
+	public void ZeroVelocity()
+	{
+		rb.velocity = Vector2.zero;
+	}
+
+	IEnumerator resetTimer(float time)
+	{
+		yield return new WaitForSeconds(time);
+		IsFlykick = false;
+		lastAttackTime = Time.time;
+		animator.IdleForce();
+	}
+
+	IEnumerator CoolDownTimer(float time)
+	{
+		yield return new WaitForSeconds(time);
+		
+		StartCoroutine(RecoverTime(3f));
+	}
+
+	IEnumerator RecoverTime(float time)
+	{
+		yield return new WaitForSeconds(time);
+		stophit();
+		IsFlykick = true;
+	}
+	IEnumerator FlyKickTimer(float time)
+	{
+		yield return new WaitForSeconds(time);
+		IsFlykick = true;
+	}
+
+	IEnumerator StopKickTimer(float time)
+	{
+		yield return new WaitForSeconds(time);
+
+		stophit();
+		StartCoroutine(FlyKickTimer(3f));
+		CR_RUNNING_StopKickTimer = false;
+	}
+
+	public void stophit()
+	{
+		IsFlykick = false;
+		FlykickCompleted = true;
+		animator.Idle();
+		//animator.Idle();
+		rb.velocity = Vector2.zero;
+		enemyState = ENEMYSTATE.IDLE;
+	}
+    public void ATTACK_AIR()
+	{
+		FlykickCompleted = false;
+
+		//if (IsFlykick == false && Time.time - lastAttackTime > attackInterval)
+		//{
+		//	IsFlykick = true;
+		//	StartCoroutine(resetTimer(0.5f));
+		//}
+		if (IsFlykick == true)
+		{
+			//StartCoroutine(CoolDownTimer(2f));
+			
+			enemyState = ENEMYSTATE.ATTACK;
+
+			Debug.Log("AIR KICK");
+
+			LookAtTarget();
+			animator.Attack2();
+
+			if (CheckForHit2())
+			{
+				Debug.Log("Kick landed");
+				Debug.Log("Ending Kick");
+				if (CR_RUNNING_StopKickTimer == false) {
+					StartCoroutine(StopKickTimer(1f));
+					CR_RUNNING_StopKickTimer = true;
+				}
+			
+				//stophit();
+				//StartCoroutine(FlyKickTimer(3f));
+				return;
+			}
+
+			Debug.Log("DistanceToTargetX() " + DistanceToTargetX());
+			int dir = (int)DirectionToPos(target.transform.position.x);
+			if (DistanceToTargetX() < 1.0f)
+			{
+				Debug.Log("Kick missed! distance was" + DistanceToTargetX());
+				Debug.Log("Ending Kick");
+				currentDirection = dir;
+				stophit();
+				StartCoroutine(FlyKickTimer(3f));
+				return;
+			}
+			//rb.AddForce(new Vector2(100 * dir, 0));
+			//rb.velocity = new Vector2(10 * dir, 0);
+			if (enemyType == ENEMYTYPE.Ninja)
+			{
+				if(smokeEffectInstance == null)
+				smokeEffectInstance = Instantiate(SmokeEffect,self.transform.position,Quaternion.identity);
+				Move(new Vector2(40 * dir, 0), 5); /// teleport ninjas
+			}
+
+			//if (enemyType == ENEMYTYPE.Fighter)
+			MoveNoAnim(new Vector2(1 * dir, 0), 7.5f); /// Fighters
+			//lastAttackTime = Time.time;
+		}
+			
+	}
 
 	public void ATTACK() {
 		if(target == null) SetTarget2Player();
@@ -138,6 +253,7 @@ public class EnemyActions : Enemy {
 
 	//return the direction to the target on a vertical ine
 	int DirToVerticalLine(){
+		if (target == null) return 0;
 		if(transform.position.y > target.transform.position.y) 
 			return -1;
 		else 
@@ -152,6 +268,15 @@ public class EnemyActions : Enemy {
 	}
 
 	//move towards a vector
+	public void MovePhysics(Vector3 vector, float speed)
+	{
+		rb.velocity = vector * speed;
+
+		if (speed > 0)
+			animator.Walk();
+		else
+			animator.Idle();
+	}
 	public void Move(Vector3 vector, float speed){
 		transform.position = new Vector2(transform.position.x + vector.x * speed * Time.deltaTime, transform.position.y + vector.y * speed * Time.deltaTime);
 		//rb.velocity = vector * speed; !WARNING this produces a bug.
@@ -160,6 +285,12 @@ public class EnemyActions : Enemy {
 			animator.Walk();
 		else
 			animator.Idle();
+	}
+
+	public void MoveNoAnim(Vector3 vector, float speed)
+	{
+		//transform.position = new Vector2(transform.position.x + vector.x * speed * Time.deltaTime, transform.position.y + vector.y * speed * Time.deltaTime);
+		transform.position = new Vector2(transform.position.x + vector.x * speed * Time.smoothDeltaTime, transform.position.y + vector.y * speed * Time.smoothDeltaTime);
 	}
 
 	//wait for an x number of seconds
@@ -191,10 +322,30 @@ public class EnemyActions : Enemy {
 		}
 	}
 
+	public bool CheckForHit2()
+	{
+		if (DistanceToTargetX() < attackRange && DistanceToTargetY() < YHitDistance)
+		{
+			DealDamageToTarget(kickDamage);
+			return true;
+		}
+		else return false;
+	}
+
 	//deal damage to the current target
 	void DealDamageToTarget(){
 		if(target != null){
 			DamageObject d = new DamageObject(attackDamage, gameObject);
+			d.attackType = AttackType.Default;
+			target.SendMessage("Hit", d, SendMessageOptions.DontRequireReceiver);
+		}
+	}
+
+	void DealDamageToTarget(int damage)
+	{
+		if (target != null)
+		{
+			DamageObject d = new DamageObject(damage, gameObject);
 			d.attackType = AttackType.Default;
 			target.SendMessage("Hit", d, SendMessageOptions.DontRequireReceiver);
 		}

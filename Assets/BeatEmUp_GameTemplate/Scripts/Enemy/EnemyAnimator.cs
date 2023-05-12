@@ -17,6 +17,14 @@ public class EnemyAnimator : MonoBehaviour {
 		}
 	}
 
+	public void IdleForce()
+	{
+		if (animator.isInitialized)
+		{
+			animator.Play("Enemy_Idle");
+		}
+	}
+
 	public void Walk(){
 		if(animator.isInitialized){ 
 			animator.SetTrigger("Walk");
@@ -28,6 +36,17 @@ public class EnemyAnimator : MonoBehaviour {
 			animator.SetTrigger("Attack1");
 			CancelInvoke();
 			Invoke("WaitForAnimationFinish", getAnimationLength("Enemy_Attack1"));
+		}
+	}
+
+	public void Attack2()
+	{
+		if (animator.isInitialized)
+		{
+			//animator.Play("EnemyAttack_air");
+			animator.SetTrigger("Attack2");			
+			CancelInvoke();
+			Invoke("WaitForAnimationFinish", getAnimationLength("Enemy_FlyKick"));
 		}
 	}
 
@@ -52,7 +71,7 @@ public class EnemyAnimator : MonoBehaviour {
 			Invoke("WaitForAnimationFinish", getAnimationLength("Enemy_KnockDown"));
 		}
 	}
-
+	
 	public void Check4Hit(){
 		transform.parent.GetComponent<EnemyActions>().CheckForHit();
 	}

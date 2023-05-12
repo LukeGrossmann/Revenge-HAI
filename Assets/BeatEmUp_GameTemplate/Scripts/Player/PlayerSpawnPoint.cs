@@ -14,5 +14,8 @@ public class PlayerSpawnPoint : MonoBehaviour {
 	void spawnPlayer() {
 		GameObject player = GameObject.Instantiate(Resources.Load("Player1"), transform.position, Quaternion.identity) as GameObject;
 		player.name = "Player1";
+		player.GetComponent<HealthSystem>().MaxHp = 85;
+		player.GetComponent<HealthSystem>().CurrentHp = 85;
 	}
 }
+

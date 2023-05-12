@@ -309,6 +309,7 @@ public class PlayerCombat : MonoBehaviour {
 		HealthSystem hs = enemy.GetComponent<HealthSystem>();
 		if(hs != null){
 			hs.SubstractHealth (d.damage);
+			Score.addscoreStatic(1);
 		}
 
 		enemy.GetComponent<EnemyAI>().Hit (d);
@@ -359,16 +360,17 @@ public class PlayerCombat : MonoBehaviour {
 		
 			bool wasHit = true;
 			UpdateHitCounter ();
-
+			Score.addscoreStatic(-1);
 			//defend
-			if(playerState.currentState == PLAYERSTATE.DEFENDING){
+			if (playerState.currentState == PLAYERSTATE.DEFENDING){
 				if(BlockAttacksFromBehind || isFacingTarget (d.inflictor)) wasHit = false;
 				if(!wasHit){
 					GlobalAudioPlayer.PlaySFX ("Defend");
 					animator.ShowDefendEffect();
 					animator.CamShakeSmall();
+					GetComponent<HealthSystem>().SubstractHealth(0.1f);
 
-					if(isFacingTarget(d.inflictor)){ 
+					if (isFacingTarget(d.inflictor)){ 
 						animator.AddForce(-1.5f);
 					} else {
 						animator.AddForce(1.5f);

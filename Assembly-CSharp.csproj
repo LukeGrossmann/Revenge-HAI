@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Enemy\EnemyActions.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Audio\AudioItem.cs" />
+    <Compile Include="Assets\BeatEmUp_GameTemplate\Sprites\Effects\cartoon-element-animation-frames\DestroyEffect.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Tools\TimeToLive.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Items\ItemActions.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Items\Item.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Tools\SetChildrenSortingOrder.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Enemy\EnemyAnimator.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Custom\Score.cs" />
+    <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\ChangeColor.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Items\ThrowingKnife.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Level\LevelInit.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Global\ItemManager.cs" />
@@ -123,6 +125,7 @@
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\BeatEmUp_GameTemplate\Scripts\Custom\test1.txt" />
     <None Include="Assets\BeatEmUp_GameTemplate\README.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
