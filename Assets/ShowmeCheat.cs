@@ -6,9 +6,10 @@ using UnityEngine.UI;
 public class ShowmeCheat : MonoBehaviour
 {
     public Image image;
+    public KeyCode keytopress;
     void Update()
     {
-        if (Input.GetKey(KeyCode.I))
+        if (Input.GetKey(keytopress))
         {
             image.enabled = true;
         }
