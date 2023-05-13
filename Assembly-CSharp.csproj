@@ -130,6 +130,7 @@
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Settings\RangeData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\UI\RoundClearScrn.cs" />
+    <Compile Include="Assets\ShowmeCheat.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scenes\ScreenChanger.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />

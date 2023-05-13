@@ -8,7 +8,19 @@ public class UIFader : MonoBehaviour {
 	public enum FADE { FadeIn, FadeOut }
 
 	public void Fade(FADE fadeDir, float fadeDuration, float StartDelay){
-		if(img != null){
+
+		var player = GameObject.Find("Player1");
+		if (player == null)
+		{
+			img.color = new Color(0, 0, 0, 255);
+			var si = GameObject.Find("ScoreImage");
+			if(si != null)
+				si.SetActive(false);
+		}
+		else img.color = new Color(255, 255, 255, 255);
+
+
+		if (img != null){
 
 			if (fadeDir == FADE.FadeIn){ 
 				StartCoroutine(FadeCoroutine(1f, 0f, fadeDuration, StartDelay, true));
@@ -38,6 +50,5 @@ public class UIFader : MonoBehaviour {
 
 		img.color = new Color(col.r, col.g, col.b, To);
 		img.enabled = !DisableOnFinish;
-
 	}
 }

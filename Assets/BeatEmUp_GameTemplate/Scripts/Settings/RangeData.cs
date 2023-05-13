@@ -9,7 +9,7 @@
     // hard 2,
     // knockdown medium 3
 // JumpKick:
-    // knockdown 3.5
+    // knockdown 2
 
 
 

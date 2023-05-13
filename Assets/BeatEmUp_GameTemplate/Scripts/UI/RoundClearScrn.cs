@@ -27,6 +27,7 @@ public class RoundClearScrn : MonoBehaviour {
 	void ShowLevelCompleteScrn(){
 		fader.Fade(UIFader.FADE.FadeOut, .5f, 1);
 		Invoke("ShowText", 1.4f);
+		//GameObject.Find("ScoreImage").GetComponent<Image>().enabled = true;
 	}
 
 	void ShowText(){
@@ -46,8 +47,10 @@ public class RoundClearScrn : MonoBehaviour {
 
 	void Update(){
 
+		if(Input.GetKey(KeyCode.Q))
+			ShowLevelCompleteScrn();
 		//text effect
-		if(text != null && text.gameObject.activeSelf){
+		if (text != null && text.gameObject.activeSelf){
 			float t = Mathf.PingPong(Time.time * speed, 1f);
 			text.color = ColorTransition.Evaluate(t);
 		}
