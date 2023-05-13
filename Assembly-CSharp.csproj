@@ -125,6 +125,7 @@
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Enemy\Enemy Brain\Attack_Behaviour.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\UI\ButtonFlicker.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Health\DamageObject.cs" />
+    <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\ChangeColor2.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\UI\RoundClearScrn.cs" />
