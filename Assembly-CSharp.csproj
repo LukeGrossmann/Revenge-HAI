@@ -127,6 +127,7 @@
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Health\DamageObject.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\ChangeColor2.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+    <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\Settings\RangeData.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\BeatEmUp_GameTemplate\Scripts\UI\RoundClearScrn.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />

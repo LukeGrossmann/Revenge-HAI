@@ -50,9 +50,13 @@ public class Enemy : MonoBehaviour {
 		enemyName = GetName();
 		self = this.gameObject;
 	}
+    private void Start()
+    {
+		walkSpeed = Random.Range(2.5f, 7f);
+    }
 
-	//returns a random name from this list
-	string GetName(){
+    //returns a random name from this list
+    string GetName(){
 		List<string> nameList = new List<string> { 
 			"Robert", 
 			"John",

@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//****** Player range data:******\\
 
-public class Info : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        // P: 2.5, 3, 4. K: 2, 3
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
+// Punch:
+    // soft 2.5,
+    // medium 3,
+    // knockdown 4.
+// Kick:
+    // hard 2,
+    // knockdown medium 3
+// JumpKick:
+    // knockdown 3.5
+
+
+
+
