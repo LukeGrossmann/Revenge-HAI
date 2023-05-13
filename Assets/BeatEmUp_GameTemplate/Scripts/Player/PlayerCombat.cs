@@ -309,7 +309,7 @@ public class PlayerCombat : MonoBehaviour {
 		HealthSystem hs = enemy.GetComponent<HealthSystem>();
 		if(hs != null){
 			hs.SubstractHealth (d.damage);
-			Score.addscoreStatic(1);
+			Score.addscoreStatic(2);
 		}
 
 		enemy.GetComponent<EnemyAI>().Hit (d);
